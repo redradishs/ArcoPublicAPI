@@ -171,7 +171,7 @@ switch($_SERVER['REQUEST_METHOD']){
                       echo json_encode($get->get_financialonly($data));
                          }
                        break;
-                
+                                
             
 
             case 'logout':
@@ -189,6 +189,7 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'POST':
         // Decode JSON data from request body
         $data = json_decode(file_get_contents("php://input"));
+        
         switch($request[0]){
 
             case 'signup':
@@ -230,9 +231,15 @@ switch($_SERVER['REQUEST_METHOD']){
             case 'edit_annualreport':
                  echo json_encode($post->edit_annualreport($data, $request[1]));
                 break;
-            
-            
-            
+            case 'delete_annualreport':
+               echo json_encode($post->delete_annualreport($request[1]));
+                    break;
+            case 'delete_financialreport':
+                 echo json_encode($post->delete_financialreport($request[1]));
+                break;
+            case 'delete_eventreport':
+                echo json_encode($post->delete_eventreport($request[1]));
+                break;
 
             default:
                 http_response_code(403);

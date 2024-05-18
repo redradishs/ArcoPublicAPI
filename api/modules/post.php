@@ -9,65 +9,94 @@
         }
 
         public function signup($data) {
-            if (!isset($data->username) || !isset($data->email) || !isset($data->password)) {
-                return $this->sendResponse("Missing fields", null, 400);
+            if (empty($data['email']) || empty($data['password']) || empty($data['username'])) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Email, username, and password are required.'
+                ];
             }
     
-            // Check if username or email already exists
-            $stmt = $this->pdo->prepare("SELECT user_id FROM users WHERE username = :username OR email = :email");
-            $stmt->execute(['username' => $data->username, 'email' => $data->email]);
+            $email = $data['email'];
+            $username = $data['username'];
+            $password = $data['password'];
     
-            if ($stmt->rowCount() > 0) {
-                return $this->sendResponse("Username or email already exists", null, 400);
-            }
-    
-            // Store the plain text password (insecure)
-            $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
-    
-            try {
-                $stmt->execute([
-                    'username' => $data->username,
-                    'email' => $data->email,
-                    'password' => $data->password
-                ]);
-    
-                return $this->sendPayload(null, "Successfully signed up", "Success", 201);
-            } catch (\PDOException $e) {
-                return $this->sendResponse("Failed to signup", $e->getMessage(), 500);
-            }
-        }
-
-        
-        public function login($data) {
-            if (empty($data->email) || empty($data->password)) {
-                return $this->sendResponse("All input fields are required!", null, 400);
-            }
-    
-            // Check if email exists and get the stored plain text password (insecure)
-            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
-            $stmt->bindParam(':email', $data->email);
+            $query = "SELECT * FROM users WHERE email = :email OR username = :username LIMIT 1";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':username', $username);
             $stmt->execute();
-    
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if ($user) {
-                // Check if the provided password matches the stored plain text password (insecure)
-                if ($data->password === $user['password']) {
-                    // Passwords match, login successful
-                    session_start();
-                    $_SESSION['user_id'] = $user['user_id'];
+                return [
+                    'status' => 'error',
+                    'message' => 'Email or username already exists.'
+                ];
+            }
     
-                    return $this->sendResponse("Login successful", null, 200);
-                } else {
-                    // Passwords don't match
-                    return $this->sendResponse("Email or password is incorrect", null, 401);
-                }
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    
+            $query = "INSERT INTO users (email, username, password) VALUES (:email, :username, :password)";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':password', $hashedPassword);
+    
+            if ($stmt->execute()) {
+                return [
+                    'status' => 'success',
+                    'message' => 'Signup successful.'
+                ];
             } else {
-                return $this->sendResponse("User not found", null, 404);
+                return [
+                    'status' => 'error',
+                    'message' => 'Signup failed. Please try again.'
+                ];
             }
         }
+    
 
+        public function login($data) {
+            if (empty($data['email']) || empty($data['password'])) {
+                $this->sendPayload(null, "failed", "Email and password are required.", 404);
+            }
+    
+            $email = trim($data['email']);
+            $password = trim($data['password']);
+    
+            // Debugging: Log received email and password
+            error_log("Login attempt: email = $email, password = $password");
+    
+            $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($user) {
+                // Debugging: Log fetched user data
+                error_log("User found: " . print_r($user, true));
+    
+                if (password_verify($password, $user['password'])) {
+                    $_SESSION['user_id'] = $user['id'];
+                    return [
+                        'status' => 'success',
+                        'message' => 'Login successful.'
+                    ];
+                } else {
+                    error_log("Password mismatch for user: $email");
+                }
+            } else {
+                error_log("User not found: $email");
+            }
 
+            return [
+                'status' => 'error',
+                'message' => 'Invalid email or password.'
+            ];
+        }
+
+    
         
         // public function login($data) {
         //     try {
@@ -661,6 +690,66 @@
             return $this->sendPayload(null, "failed", $errmsg, $code);
         }
     
+        public function delete_annualreport($id){
+            $sql = "DELETE FROM annualreports WHERE report_id = ?";
+            try{
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                      $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully deleted record.", 200);
+        
+            }
+            catch(\PDOException $e){
+                $errmsg = $e->getMessage();
+                $code = 400;
+            }
+           
+            return $this->sendPayload(null, "failed", $errmsg, $code);
+        }
+
+        public function delete_financialreport($id){
+            $sql = "DELETE FROM financialreports WHERE financialreport_id = ?";
+            try{
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                      $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully deleted record.", 200);
+        
+            }
+            catch(\PDOException $e){
+                $errmsg = $e->getMessage();
+                $code = 400;
+            }
+           
+            return $this->sendPayload(null, "failed", $errmsg, $code);
+        }
+
+        public function delete_eventreport($id){
+            $sql = "DELETE FROM eventreports WHERE event_id = ?";
+            try{
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                      $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully deleted record.", 200);
+        
+            }
+            catch(\PDOException $e){
+                $errmsg = $e->getMessage();
+                $code = 400;
+            }
+           
+            return $this->sendPayload(null, "failed", $errmsg, $code);
+        }
+
     
         
         
