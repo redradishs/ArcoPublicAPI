@@ -83,6 +83,55 @@ class Get extends GlobalMethods{
         }
     }
 
+    /*---------------------------------PROJECT REPORT-----------------------------------*/
+    public function get_projectreport($data) {
+        // Select the most recent report by user_id
+        $sqlString = "SELECT * FROM projectreport WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
+        $stmt = $this->pdo->prepare($sqlString);
+        $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+    
+        if ($result) { // Check if a record is returned
+            return $this->getResponse($result, "Success", null, 200); // Success response
+        } else {
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+        }
+    }
+
+            //Final
+            public function get_projectreportAll($data) {
+                // Select the most recent report by user_id
+                $sqlString = "SELECT * FROM projectreport WHERE user_id = ?";
+                $stmt = $this->pdo->prepare($sqlString);
+                $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+                $stmt->execute();
+            
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            
+                if ($result) { // Check if a record is returned
+                    return $this->getResponse($result, "Success", null, 200); // Success response
+                } else {
+                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                }
+            }
+
+            public function get_projectonly($data) {
+                $sqlString = "SELECT * FROM projectreport WHERE report_id = ?";
+                $stmt = $this->pdo->prepare($sqlString);
+                $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+                $stmt->execute();
+            
+                $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            
+                if ($result) { // Check if a record is returned
+                    return $this->getResponse($result, "Success", null, 200); // Success response
+                } else {
+                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                }
+            }
+    /*---------------------------------END PROJECT REPORT--------------------------------*/
         //data to be changed to user_id, will do once testing phase is over
         public function get_flipbookall() {
             $sqlString = "SELECT u.username, r.title, r.description, c.collage_desc, f.* 

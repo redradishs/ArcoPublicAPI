@@ -1,5 +1,6 @@
     <?php
     require_once("global.php");
+
     class Post extends GlobalMethods {
 
         private $pdo;
@@ -9,39 +10,44 @@
         }
 
         public function signup($data) {
+            // Check if $data is an object and convert it to an array
+            if (is_object($data)) {
+                $data = (array)$data;
+            }
+        
             if (empty($data['email']) || empty($data['password']) || empty($data['username'])) {
                 return [
                     'status' => 'error',
                     'message' => 'Email, username, and password are required.'
                 ];
             }
-    
+        
             $email = $data['email'];
             $username = $data['username'];
             $password = $data['password'];
-    
+        
             $query = "SELECT * FROM users WHERE email = :email OR username = :username LIMIT 1";
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':username', $username);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+        
             if ($user) {
                 return [
                     'status' => 'error',
                     'message' => 'Email or username already exists.'
                 ];
             }
-    
+        
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    
+        
             $query = "INSERT INTO users (email, username, password) VALUES (:email, :username, :password)";
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':password', $hashedPassword);
-    
+        
             if ($stmt->execute()) {
                 return [
                     'status' => 'success',
@@ -54,47 +60,55 @@
                 ];
             }
         }
+        
     
 
         public function login($data) {
-            if (empty($data['email']) || empty($data['password'])) {
-                $this->sendPayload(null, "failed", "Email and password are required.", 404);
-            }
-    
-            $email = trim($data['email']);
-            $password = trim($data['password']);
-    
-            // Debugging: Log received email and password
-            error_log("Login attempt: email = $email, password = $password");
-    
-            $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
-            $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            if ($user) {
-                // Debugging: Log fetched user data
-                error_log("User found: " . print_r($user, true));
-    
-                if (password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    return [
-                        'status' => 'success',
-                        'message' => 'Login successful.'
-                    ];
-                } else {
-                    error_log("Password mismatch for user: $email");
-                }
-            } else {
-                error_log("User not found: $email");
-            }
+    // Check if $data is an object and convert it to an array
+    if (is_object($data)) {
+        $data = (array)$data;
+    }
 
+    if (empty($data['email']) || empty($data['password'])) {
+        $this->sendPayload(null, "failed", "Email and password are required.", 404);
+        return; // Ensure function exits after sending payload
+    }
+
+    $email = trim($data['email']);
+    $password = trim($data['password']);
+
+    // Debugging: Log received email and password
+    error_log("Login attempt: email = $email, password = $password");
+
+    $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
+    $stmt = $this->pdo->prepare($query);
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        // Debugging: Log fetched user data
+        error_log("User found: " . print_r($user, true));
+
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
             return [
-                'status' => 'error',
-                'message' => 'Invalid email or password.'
+                'status' => 'success',
+                'message' => 'Login successful.'
             ];
+        } else {
+            error_log("Password mismatch for user: $email");
         }
+    } else {
+        error_log("User not found: $email");
+    }
+
+    return [
+        'status' => 'error',
+        'message' => 'Invalid email or password.'
+    ];
+}
+
 
     
         
@@ -238,7 +252,117 @@
         }
         
 
+        /*---------------------ProjectReport-----------------------*/
 
+        public function projectreport($data, $id) {
+
+            if (!isset($data->projectName) ||!isset($data->projectManager) ||!isset($data->startDate) ||!isset($data->endDate)) {
+                return $this->sendResponse("Missing fields", null, 400);
+            }
+        
+            $stmt = $this->pdo->prepare("SELECT projectID FROM projectreport WHERE projectName = :projectName");
+            $stmt->execute(['projectName' => $data->projectName]);
+        
+            if ($stmt->rowCount() > 0) {
+                return $this->sendResponse("Project Name is Already Exists", null, 400);
+            }
+        
+            try {
+                // Prepare and execute the SQL statement
+                $stmt = $this->pdo->prepare("INSERT INTO projectreport (startDate, endDate,projectName, projectManager, statusDesc, overallProgress, milestoneDesc, compeDate, taskDesc, stat, issuesName, issuesPrio) 
+                                            VALUES (:startDate, :endDate, :projectName, :projectManager, :statusDesc, :overallProgress, :milestoneDesc, :compeDate, :taskDesc, :stat, :issuesName, :issuesPrio)");
+                $stmt->execute([
+                    'startDate'=>$data->startDate,
+                    'endDate' => $data->endDate,
+                    'projectName' => $data->projectName,
+                    'projectManager' => $data->projectManager,
+                    'statusDesc'=>$data->statusDesc,
+                    'overallProgress'=>$data->overallProgress,
+                    'milestoneDesc'=>$data->milestoneDesc,
+                    'compeDate'=>$data->compeDate,
+                    'taskDesc'=>$data->taskDesc, // Fixed typo: 'taskDesk' to 'taskDesc'
+                    'stat'=>$data->stat,
+                    'issuesName'=>$data->issuesName,
+                    'issuesPrio'=>$data->issuesPrio,
+                ]);
+        
+                // Get the ID of the newly inserted report
+                $lastInsertId = $this->pdo->lastInsertId(); 
+        
+                return $this->sendResponse("Report generated successfully", null, 200);
+            } catch (\PDOException $e) {
+        
+                return $this->sendResponse("Failed to generate report. Please try again later.", null, 500);
+            }
+        
+        }
+
+        public function edit_projectReport($data, $id) {
+            $sql = "UPDATE projectreport
+                    SET 
+                        startDate = ?,
+                        endDate = ?,
+                        projectName = ?,
+                        projectManager = ?,
+                        statusDesc = ?,
+                        overallProgress = ?,
+                        milestoneDesc = ?,
+                        compeDate = ?,
+                        taskDesc = ?,
+                        stat = ?,
+                        issuesName = ?,
+                        issuesPrio = ?
+                    WHERE
+                        projectID = ?;";
+                    
+            try {
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                        $data->startDate,
+                        $data->endDate,
+                        $data->projectName,
+                        $data->projectManager,
+                        $data->statusDesc,
+                        $data->overallProgress,
+                        $data->milestoneDesc,
+                        $data->compeDate,
+                        $data->taskDesc,
+                        $data->stat,
+                        $data->issuesName,
+                        $data->issuesPrio,
+                        $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully created a new record.", 200);
+            } catch (\PDOException $e) {
+                
+                $errmsg = $e->getMessage();
+                return $this->sendPayload(null, "failed", $errmsg, 400);
+            }
+        }
+        
+        public function delete_projectreport($id){
+            $sql = "DELETE FROM projectreport WHERE projectID = ?";
+            try{
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                      $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully deleted record.", 200);
+        
+            }
+            catch(\PDOException $e){
+                $errmsg = $e->getMessage();
+                $code = 400;
+            }
+           
+            return $this->sendPayload(null, "failed", $errmsg, $code);
+        }
+
+        /*---------------------End of ProjectReport--------------------*/
         //Final Done
         public function annualreports($data, $id) {
             
