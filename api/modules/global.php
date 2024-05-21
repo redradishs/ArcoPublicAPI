@@ -23,6 +23,7 @@ class GlobalMethods{
         http_response_code($statusCode);
         header('Content-Type: application/json');
         echo json_encode($response);
+        exit();
     }
 
     public function getResponse($data, $remarks, $error, $statusCode) {
@@ -39,6 +40,8 @@ class GlobalMethods{
         }
         http_response_code($statusCode);
         return $response;
+
+        exit();
     }
 
 
