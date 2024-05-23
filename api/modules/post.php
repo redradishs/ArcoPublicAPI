@@ -745,6 +745,71 @@
             return $this->sendPayload(null, "failed", $errmsg, $code);
         }
 
+
+        public function edit_projectReport($data, $id) {
+            $sql = "UPDATE projectreport
+                    SET 
+                        startDate = ?,
+                        endDate = ?,
+                        projectName = ?,
+                        projectManager = ?,
+                        statusDesc = ?,
+                        overallProgress = ?,
+                        milestoneDesc = ?,
+                        compeDate = ?,
+                        taskDesc = ?,
+                        stat = ?,
+                        issuesName = ?,
+                        issuesPrio = ?
+                    WHERE
+                        projectID = ?;";
+                    
+            try {
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                        $data->startDate,
+                        $data->endDate,
+                        $data->projectName,
+                        $data->projectManager,
+                        $data->statusDesc,
+                        $data->overallProgress,
+                        $data->milestoneDesc,
+                        $data->compeDate,
+                        $data->taskDesc,
+                        $data->stat,
+                        $data->issuesName,
+                        $data->issuesPrio,
+                        $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully created a new record.", 200);
+            } catch (\PDOException $e) {
+                
+                $errmsg = $e->getMessage();
+                return $this->sendPayload(null, "failed", $errmsg, 400);
+            }
+        }
+        
+        public function delete_projectreport($id){
+            $sql = "DELETE FROM projectreport WHERE projectID = ?";
+            try{
+                $statement = $this->pdo->prepare($sql);
+                $statement->execute(
+                    [
+                      $id
+                    ]
+                );
+                return $this->sendPayload(null, "success", "Successfully deleted record.", 200);
+        
+            }
+            catch(\PDOException $e){
+                $errmsg = $e->getMessage();
+                $code = 400;
+            }
+           
+            return $this->sendPayload(null, "failed", $errmsg, $code);
+        }
     
         
         

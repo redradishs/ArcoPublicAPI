@@ -181,6 +181,34 @@ switch($_SERVER['REQUEST_METHOD']){
                       echo json_encode($get->get_financialonly($data));
                          }
                        break;
+
+                       case 'projectreport': //final
+                        if(count($request)>1){
+                            echo json_encode($get->get_projectreport($request[1]));
+                                }
+                           else{
+                            echo json_encode($get->get_projectreport($data));
+                                   }
+                            break;
+    
+                    case 'projectreportall': //final
+                        if(count($request)>1){
+                            echo json_encode($get->get_projectreportAll($request[1]));
+                                }
+                            else{
+                            echo json_encode($get->get_projectreportAll($data));
+                             }
+                            break;
+
+
+                            case 'projectreportonly': //final
+                                if(count($request)>1){
+                                echo json_encode($get->get_projectonly($request[1]));
+                                      }
+                                else{
+                                    echo json_encode($get->get_projectonly($data));
+                                    }
+                                    break;
                                 
             
 
