@@ -72,7 +72,7 @@ switch($_SERVER['REQUEST_METHOD']){
                      echo json_encode($get->get_flipbookall());
                  }
                  break;
-            
+            //COLLAGE FINAL
             case 'collage':
                 if(count($request)>1){
                     echo json_encode($get->get_collage($request[1]));
@@ -81,6 +81,16 @@ switch($_SERVER['REQUEST_METHOD']){
                     echo json_encode($get->get_collage($data));
                 }
                 break;
+
+                //COLLAGE ALL FINAL
+                case 'collage_all':
+                    if(count($request)>1){
+                        echo json_encode($get->getCollageAll($request[1]));
+                    }
+                    else{
+                        echo json_encode($get->getCollageAll($data));
+                    }
+                    break;
                 
             case 'reports':
                 if(count($request)>1){
@@ -113,24 +123,6 @@ switch($_SERVER['REQUEST_METHOD']){
                         echo json_encode($get->get_eventreport($data));
                           }
                        break;
-                case 'projectreport': //final
-                    if(count($request)>1){
-                        echo json_encode($get->get_projectreport($request[1]));
-                            }
-                       else{
-                        echo json_encode($get->get_projectreport($data));
-                               }
-                        break;
-
-                case 'projectreportall': //final
-                    if(count($request)>1){
-                        echo json_encode($get->get_projectreportAll($request[1]));
-                            }
-                        else{
-                        echo json_encode($get->get_projectreportAll($data));
-                         }
-                        break;
-
                 case 'eventreportall': //final
                  if(count($request)>1){
                  echo json_encode($get->get_eventreportAll($request[1]));
@@ -189,15 +181,6 @@ switch($_SERVER['REQUEST_METHOD']){
                       echo json_encode($get->get_financialonly($data));
                          }
                        break;
-                    
-                case 'projectreportonly': //final
-                    if(count($request)>1){
-                    echo json_encode($get->get_projectonly($request[1]));
-                          }
-                    else{
-                        echo json_encode($get->get_projectonly($data));
-                        }
-                        break;
                                 
             
 
@@ -220,13 +203,11 @@ switch($_SERVER['REQUEST_METHOD']){
         switch($request[0]){
 
             case 'signup':
-                $result = $post->signup($data);
-                echo json_encode($result);
+                echo json_encode($post->signup($data));
                 break;
 
             case 'login':
-                $result = $post->login($data);
-                echo json_encode($result);
+                echo json_encode($post->login($data));
                 break;
 
             case 'report':
@@ -235,10 +216,9 @@ switch($_SERVER['REQUEST_METHOD']){
             case 'flipbook':
                 echo json_encode($post->flipbook($data, $request[1]));
                  break;
-            
-             case 'collage':
-                echo json_encode($post->uploadImage($data));
-                break;
+                 case 'collage':
+                    echo json_encode($post->uploadImage('file', $request[1]));
+                    break;
              case 'annualreport':
                 echo json_encode($post->annualreports($data, $request[1]));
                 break; //final
@@ -251,13 +231,6 @@ switch($_SERVER['REQUEST_METHOD']){
             case 'financialreport':
                 echo json_encode($post->insertFinancialReport($data, $request[1]));
                 break;
-            case 'projectreport';
-                echo json_encode($post->ProjectReport($data, $request[1]));
-                break; 
-            case 'edit_projectReport';
-                echo json_encode($post->edit_projectreport($data, $request[1]));
-                break;   
-            
             case 'edit_eventreport':
                 echo json_encode($post->edit_eventreport($data, $request[1]));
                  break;
@@ -275,10 +248,6 @@ switch($_SERVER['REQUEST_METHOD']){
                 break;
             case 'delete_eventreport':
                 echo json_encode($post->delete_eventreport($request[1]));
-                break;
-
-            case 'delete_projectreport':
-                echo json_encode($post->delete_projectreport($request[1]));
                 break;
 
             default:
