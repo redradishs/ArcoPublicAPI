@@ -54,6 +54,15 @@ switch($_SERVER['REQUEST_METHOD']){
                 }
                 break;
 
+                case 'eventexpenses': //final
+                    if(count($request)>1){
+                        echo json_encode($get->get_eventexpenses($request[1]));
+                          }
+                       else{
+                         echo json_encode($get->get_eventexpenses($data));
+                           }
+                        break;
+
                 
             case 'flipbook':
                 if(count($request)>1){

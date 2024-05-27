@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2024 at 10:52 AM
+-- Generation Time: May 27, 2024 at 09:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,7 +47,8 @@ CREATE TABLE `annualreports` (
 INSERT INTO `annualreports` (`report_id`, `user_id`, `title`, `year`, `executive_summary`, `company_achievements`, `financial_statements`, `management_discussion`, `future_outlook`, `created_at`) VALUES
 (15, 2, 'ARCO Republic', 2023, 'In 2023, our company achieved significant milestones, including expanding our market presence and launching innovative products. We focused on sustainability and corporate responsibility, ensuring long-term growth and value for our stakeholders.', 'In 2023, we successfully launched three new products, expanded into two new international markets, and increased our customer base by 25%. Our commitment to innovation and quality has been recognized with several industry awards.', 'Our financial performance in 2023 was robust, with a 15% increase in revenue and a 10% rise in net profit compared to the previous year. We maintained strong cash flow and reduced our debt-to-equity ratio, positioning us well for future growth.', 'The management team focused on strategic initiatives to drive growth and efficiency. We invested in technology and talent, streamlined operations, and enhanced our customer service capabilities. These efforts have resulted in improved operational performance and customer satisfaction.', 'Looking ahead, we are optimistic about our growth prospects. We plan to continue our expansion into new markets, invest in research and development, and pursue strategic partnerships. Our focus will remain on innovation, sustainability, and delivering value to our shareholders.', '2024-05-22'),
 (16, 2, 'ICTE Solutions Annual Report', 2024, 'In 2023, our company reached unprecedented heights, driven by our relentless pursuit of excellence and innovation. We expanded our global footprint, introduced groundbreaking products, and strengthened our commitment to sustainability. Our strategic initiatives have positioned us as a leader in our industry, delivering exceptional value to our stakeholders.', 'Throughout 2023, we launched five innovative products that have set new standards in the market. We entered three new international markets, significantly increasing our global presence. Our customer base grew by 30%, and we received numerous accolades for our commitment to quality and innovation.', 'The financial performance in 2023 was outstanding, with a 20% increase in revenue and a 12% rise in net profit compared to the previous year. Our strong cash flow and prudent financial management allowed us to reduce our debt-to-equity ratio further, ensuring a solid foundation for future growth.', 'The management team focused on executing strategic initiatives that drive growth and operational efficiency. Investments in cutting-edge technology and top-tier talent have streamlined our operations and enhanced our customer service capabilities. These efforts have resulted in significant improvements in operational performance and customer satisfaction.', 'Looking forward, we are excited about the opportunities that lie ahead. Our plans include further expansion into emerging markets, increased investment in research and development, and the pursuit of strategic partnerships. Our unwavering focus on innovation, sustainability, and shareholder value will continue to guide our efforts as we strive for excellence in all aspects of our business.', '2024-05-22'),
-(17, 2, 'SALT Solutions 2024', 2024, 'In 2023, our company achieved remarkable success through strategic initiatives and innovative solutions. We expanded our market reach, introduced cutting-edge products, and reinforced our commitment to sustainability. Our efforts have resulted in significant growth and value creation for our stakeholders.', 'In 2023, we launched four groundbreaking products that have revolutionized the industry. We expanded into two new international markets, enhancing our global footprint. Our customer base grew by 28%, and we received several prestigious awards for our innovation and quality.', 'Our financial performance in 2023 was exceptional, with a 18% increase in revenue and a 14% rise in net profit compared to the previous year. We maintained robust cash flow and further reduced our debt-to-equity ratio, positioning us strongly for future growth.', 'The management team focused on strategic initiatives to drive growth and operational efficiency. We invested in advanced technology and top-tier talent, streamlined our operations, and enhanced our customer service capabilities. These efforts have led to significant improvements in operational performance and customer satisfaction.', 'Looking ahead, we are optimistic about our growth prospects. We plan to continue our expansion into new markets, invest in research and development, and pursue strategic partnerships. Our focus will remain on innovation, sustainability, and delivering value to our shareholders.', '2024-05-22');
+(17, 2, 'SALT Solutions 2024', 2024, 'In 2023, our company achieved remarkable success through strategic initiatives and innovative solutions. We expanded our market reach, introduced cutting-edge products, and reinforced our commitment to sustainability. Our efforts have resulted in significant growth and value creation for our stakeholders.', 'In 2023, we launched four groundbreaking products that have revolutionized the industry. We expanded into two new international markets, enhancing our global footprint. Our customer base grew by 28%, and we received several prestigious awards for our innovation and quality.', 'Our financial performance in 2023 was exceptional, with a 18% increase in revenue and a 14% rise in net profit compared to the previous year. We maintained robust cash flow and further reduced our debt-to-equity ratio, positioning us strongly for future growth.', 'The management team focused on strategic initiatives to drive growth and operational efficiency. We invested in advanced technology and top-tier talent, streamlined our operations, and enhanced our customer service capabilities. These efforts have led to significant improvements in operational performance and customer satisfaction.', 'Looking ahead, we are optimistic about our growth prospects. We plan to continue our expansion into new markets, invest in research and development, and pursue strategic partnerships. Our focus will remain on innovation, sustainability, and delivering value to our shareholders.', '2024-05-22'),
+(21, 2, 'Arco Report', 2024, 'Arco Annual Report', 'Arco Annual Report', 'Arco Annual Report', 'Arco Annual Report', 'Arco Annual Report', '2024-05-27');
 
 -- --------------------------------------------------------
 
@@ -68,9 +69,7 @@ CREATE TABLE `collage` (
 
 INSERT INTO `collage` (`collage_id`, `user_id`, `image_path`, `event_id`) VALUES
 (30, 1, 'images/Project_Report.pdf', NULL),
-(32, NULL, 'images/Project_Report.pdf', NULL),
-(92, 2, '../images/img_6651a4f79fe3e1.41608285.png', 23),
-(93, 2, '../images/img_6651a505c7d135.09725060.png', 23);
+(32, NULL, 'images/Project_Report.pdf', NULL);
 
 -- --------------------------------------------------------
 
@@ -81,8 +80,7 @@ INSERT INTO `collage` (`collage_id`, `user_id`, `image_path`, `event_id`) VALUES
 CREATE TABLE `eventexpenses` (
   `expense_id` bigint(20) UNSIGNED NOT NULL,
   `event_id` bigint(20) UNSIGNED NOT NULL,
-  `expense_item` varchar(255) NOT NULL,
-  `expense_amount` decimal(10,2) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `expense_item1` varchar(255) DEFAULT NULL,
   `expense_amount1` int(11) DEFAULT NULL,
   `expense_item2` varchar(255) DEFAULT NULL,
@@ -133,8 +131,7 @@ INSERT INTO `eventreports` (`event_id`, `event_name`, `event_date`, `event_title
 (12, 'Annual Tech Conference', '2024-06-15', 'Innovations in Technology', '123 Tech Avenue, Silicon Valley, CA', 500, 480, 'The Annual Tech Conference 2024 focused on the latest innovations in technology. Industry leaders shared insights on emerging trends, and several new products were unveiled. The event was well-received, with high engagement from participants.', 2, '2024-05-22 03:35:41', '2024-05-22 03:35:41'),
 (13, 'ICTE Annual Conference', '2024-06-15', 'The ICTE Yearly Reviews', '9348, Mulawin OG, Olongapo City', 500, 480, 'The Annual Tech Conference 2024 focused on the latest innovations in technology. Industry leaders shared insights on emerging trends, and several new products were unveiled. The event was well-received, with high engagement from participants.', 2, '2024-05-22 03:39:01', '2024-05-22 03:39:01'),
 (14, 'SALT Solutions Conference', '2024-05-22', 'Solution Based Conference', '283, Sta Rita, Olongapo City', 500, 480, 'The Annual Tech Conference 2024 focused on the latest innovations in technology. Industry leaders shared insights on emerging trends, and several new products were unveiled. The event was well-received, with high engagement from participants.', 2, '2024-05-22 03:40:22', '2024-05-22 03:40:22'),
-(15, 'Gordon College Innovative Youth', '2024-05-21', 'Innovation for Solution', '283, Sta Rita, Olongapo City', 500, 480, 'The Annual Tech Conference 2024 focused on the latest innovations in technology. Industry leaders shared insights on emerging trends, and several new products were unveiled. The event was well-received, with high engagement from participants.', 2, '2024-05-22 03:41:20', '2024-05-22 03:41:20'),
-(23, 'Event Report Test 1', '2024-05-25', 'Event Report Test 1', 'Event Report Test 1', 234, 234, 'Event Report Test 1', 2, '2024-05-25 08:44:25', '2024-05-25 08:44:25');
+(15, 'Gordon College Innovative Youth', '2024-05-21', 'Innovation for Solution', '283, Sta Rita, Olongapo City', 500, 480, 'The Annual Tech Conference 2024 focused on the latest innovations in technology. Industry leaders shared insights on emerging trends, and several new products were unveiled. The event was well-received, with high engagement from participants.', 2, '2024-05-22 03:41:20', '2024-05-22 03:41:20');
 
 -- --------------------------------------------------------
 
@@ -203,7 +200,9 @@ INSERT INTO `financialreports` (`financialreport_id`, `user_id`, `date_created`,
 (8, 2, '2024-05-22 03:45:04', 'ARCO Financial Report', 'Red Anicas', '2024-05-01', '2024-05-31', '50000', 30000.00, '20000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Office Supplies', 5000.00, 'Travel', 3000.00, 'Utilities', 2000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'This report provides a brief overview of the expenses for office supplies, travel, and utilities for the month of May 2024, This report provides a brief overview of the expenses for office supplies, travel, and utilities for the month of May 2024, This report provides a brief overview of the expenses for office supplies, travel, and utilities for the month of May 2024.'),
 (9, 2, '2024-05-22 03:45:57', 'SALT Solutions Financial Report', 'Asher Mayson', '2024-05-01', '2024-05-31', '70000', 3000.00, '20000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Office Supplies', 938488.00, 'Travel', 338493.00, 'Workforce', 200000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'In the fiscal year 2023, The SALT Solutions Company successfully generated a revenue of 500 million pesos. The expenses incurred during this period were allocated as follows. Everything was used for its purpose.'),
 (10, 2, '2024-05-22 03:47:14', 'April Solutions Financial Report', 'Asher Mayson', '2024-04-01', '0000-00-00', '70000', 3000.00, '20000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Office Supplies', 5000.00, 'Travel', 3000.00, 'Utilities', 2000.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'April 2024 The SALT Solutions Company successfully generated a revenue of 500 million pesos. The expenses incurred during this period were allocated as follows. Everything was used for its purpose.'),
-(11, 2, '2024-05-25 07:50:58', 'dsfsd', 'ksf', '2024-12-01', '2024-12-02', 'kdfksd', 234.00, 'kdfk', 888.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'kldnkfs', 88.00, 'kdnfkn', 99.00, 'jkhkjsdfjk', 939.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dfsdgw');
+(11, 2, '2024-05-25 07:50:58', 'dsfsd', 'ksf', '2024-12-01', '2024-12-02', 'kdfksd', 234.00, 'kdfk', 888.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'kldnkfs', 88.00, 'kdnfkn', 99.00, 'jkhkjsdfjk', 939.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dfsdgw'),
+(12, 2, '2024-05-27 03:26:17', 'This is the financial Report', 'Asher James Mayson', '2024-05-26', '2024-05-28', 'dfkjsh', 3840.00, 'oirkdf', 95349.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'kjfsdjk', 9024.00, 'DSSDGSD', 23432.00, 'GDFGD', 34534.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'GDFGDFG'),
+(13, 2, '2024-05-27 04:51:23', 'This is the report', 'Asher James', '2023-12-07', '2024-12-07', 'Source of income', 2384.00, 'sdsdfsd', 23423.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, 'sdfsdfs', 23423.00, 'fsdfsdf', 2342.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, '', 0.00, 'dfsdfs');
 
 -- --------------------------------------------------------
 
@@ -352,7 +351,8 @@ ALTER TABLE `collage`
 --
 ALTER TABLE `eventexpenses`
   ADD PRIMARY KEY (`expense_id`),
-  ADD KEY `event_id` (`event_id`);
+  ADD KEY `event_id` (`event_id`),
+  ADD KEY `fk_eventexpenses_user_id` (`user_id`);
 
 --
 -- Indexes for table `eventreports`
@@ -404,7 +404,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `annualreports`
 --
 ALTER TABLE `annualreports`
-  MODIFY `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `collage`
@@ -416,19 +416,19 @@ ALTER TABLE `collage`
 -- AUTO_INCREMENT for table `eventexpenses`
 --
 ALTER TABLE `eventexpenses`
-  MODIFY `expense_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `expense_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `eventreports`
 --
 ALTER TABLE `eventreports`
-  MODIFY `event_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `event_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `financialreports`
 --
 ALTER TABLE `financialreports`
-  MODIFY `financialreport_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `financialreport_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `flipbook`
@@ -469,13 +469,14 @@ ALTER TABLE `annualreports`
 --
 ALTER TABLE `collage`
   ADD CONSTRAINT `collage_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `fk_event_id` FOREIGN KEY (`event_id`) REFERENCES `eventreports` (`event_id`);
+  ADD CONSTRAINT `fk_event_id` FOREIGN KEY (`event_id`) REFERENCES `eventreports` (`event_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `eventexpenses`
 --
 ALTER TABLE `eventexpenses`
-  ADD CONSTRAINT `eventexpenses_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `eventreports` (`event_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `eventexpenses_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `eventreports` (`event_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_eventexpenses_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `eventreports`

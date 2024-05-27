@@ -96,38 +96,9 @@
             ];
         }
 
-    
-        
-        // public function login($data) {
-        //     try {
-        //         // Prepare and execute the query to fetch user information based on email
-        //         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
-        //         $stmt->bindParam(':email', $data->email);
-        //         $stmt->execute();
-        
-        //         // Fetch the result
-        //         $stmt_flag = $stmt->rowCount();
-        
-        //         if ($stmt_flag > 0) {
-        //             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-        //             // Check if the provided password matches the stored hash
-        //             if (password_verify($data->password, $userData['password'])) {
-        //                 // Passwords match, login successful
-                        
-        
-        //                 return $this->sendPayload(null, "Successfully logged in", "Success", 200);
-        //             } else {
-        //                 // Passwords do not match
-        //                 return $this->sendPayload(null, "Incorrect email or password", "Error", 400);
-        //             }
-        //         } else {
-        //             // User not found
-        //             return $this->sendPayload(null, "Incorrect email or password", "Error", 400);
-        //         }
-        //     } catch (\Exception $e) {
-        //         return $this->sendPayload(null, "Failed to login", $e->getMessage(), 500);
-        //     }
-        // }
+
+
+
         
 
 
@@ -314,7 +285,6 @@
         
         //final done
         public function expenses($data, $user_id) {
-            
             $sql = "SELECT event_id FROM eventreports WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         
             try {
@@ -329,8 +299,6 @@
                 // SQL query to insert expense data with multiple columns
                 $insertSql = "INSERT INTO eventexpenses (
                     event_id,
-                    expense_item,
-                    expense_amount,
                     expense_item1, expense_amount1,
                     expense_item2, expense_amount2,
                     expense_item3, expense_amount3,
@@ -340,15 +308,15 @@
                     expense_item7, expense_amount7,
                     expense_item8, expense_amount8,
                     expense_item9, expense_amount9,
-                    expense_item10, expense_amount10
+                    expense_item10, expense_amount10,
+                    user_id
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
                 // Validate data and set default values to avoid mismatches
                 $values = [
                     $latestEventId,
-                    $data->expense_item ?? null, $data->expense_amount ?? null,
                     $data->expense_item1 ?? null, $data->expense_amount1 ?? null,
                     $data->expense_item2 ?? null, $data->expense_amount2 ?? null,
                     $data->expense_item3 ?? null, $data->expense_amount3 ?? null,
@@ -358,9 +326,9 @@
                     $data->expense_item7 ?? null, $data->expense_amount7 ?? null,
                     $data->expense_item8 ?? null, $data->expense_amount8 ?? null,
                     $data->expense_item9 ?? null, $data->expense_amount9 ?? null,
-                    $data->expense_item10 ?? null, $data->expense_amount10 ?? null
+                    $data->expense_item10 ?? null, $data->expense_amount10 ?? null,
+                    $user_id
                 ];
-        
         
                 // Prepare and execute the SQL statement with the correct number of values
                 $statement = $this->pdo->prepare($insertSql);
@@ -374,6 +342,7 @@
                 return $this->sendPayload(null, "failed", "Error: " . $e->getMessage(), 400);
             }
         }
+
 
 
         public function insertFinancialReport($data, $id) {
