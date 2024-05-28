@@ -51,6 +51,24 @@ class Get extends GlobalMethods{
 
          return array("code"=>$code, "errmsg"=>$errmsg);
     }
+
+
+
+    public function get_eventexpenses($user_id) {
+        
+        $sqlString = "SELECT * FROM eventexpenses WHERE user_id = ? ORDER BY expense_id DESC LIMIT 1";
+        $stmt = $this->pdo->prepare($sqlString);
+        $stmt->bindParam(1, $user_id, PDO::PARAM_INT); 
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
+    
+        if ($result) { 
+            return $this->getResponse($result, "Success", null, 200); 
+        } else {
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
+        }
+    }
     
     public function get_signup($id=null){
         $conditionString = null;
