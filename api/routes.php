@@ -1,14 +1,11 @@
 <?php
 
-// Set CORS headers to allow requests from any origin
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS");  
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json"); 
 
 
-
-// Include necessary files
 require_once("config/database.php");
 require_once("modules/post.php");
 require_once("modules/get.php");
@@ -34,15 +31,12 @@ if(isset($_REQUEST['request'])){
     $request = explode('/', $_REQUEST['request']);
 }
 else{
-    // If 'request' parameter is not set, return a 404 response
     http_response_code(404);
     echo json_encode(["error" => "Not Found"]);
     exit;
 }
 
-
 switch($_SERVER['REQUEST_METHOD']){
-    // Handle GET requests
     case 'GET':
         switch($request[0]){
             case 'get_signup':
@@ -54,7 +48,7 @@ switch($_SERVER['REQUEST_METHOD']){
                 }
                 break;
 
-                case 'eventexpenses': //final
+                case 'eventexpenses': 
                     if(count($request)>1){
                         echo json_encode($get->get_eventexpenses($request[1]));
                           }
@@ -116,7 +110,7 @@ switch($_SERVER['REQUEST_METHOD']){
                      echo json_encode($get->get_reportsall());
                     }
                     break;
-             case 'annualreport': //final
+             case 'annualreport': 
                      if(count($request)>1){
                       echo json_encode($get->get_annualReport($request[1]));
                      }
@@ -124,7 +118,7 @@ switch($_SERVER['REQUEST_METHOD']){
                       echo json_encode($get->get_annualReport($data));
                         }
                         break;
-                case 'eventreport': //final
+                case 'eventreport': 
                    if(count($request)>1){
                        echo json_encode($get->get_eventreport($request[1]));
                          }
@@ -132,7 +126,7 @@ switch($_SERVER['REQUEST_METHOD']){
                         echo json_encode($get->get_eventreport($data));
                           }
                        break;
-                case 'eventreportall': //final
+                case 'eventreportall': 
                  if(count($request)>1){
                  echo json_encode($get->get_eventreportAll($request[1]));
                    }
@@ -141,7 +135,7 @@ switch($_SERVER['REQUEST_METHOD']){
                           }
                      break;
 
-                case 'annualreportall': //final
+                case 'annualreportall': 
                         if(count($request)>1){
                         echo json_encode($get->get_annualReportAll($request[1]));
                           }
@@ -149,7 +143,7 @@ switch($_SERVER['REQUEST_METHOD']){
                           echo json_encode($get->get_annualReportAll($data));
                                  }
                             break;
-                 case 'financialreportall': //final
+                 case 'financialreportall': 
                       if(count($request)>1){
                      echo json_encode($get->get_financialreportAll($request[1]));
                          }
@@ -157,7 +151,7 @@ switch($_SERVER['REQUEST_METHOD']){
                         echo json_encode($get->get_financialreportAll($data));
                              }
                     break;
-                case 'financialreport': //final
+                case 'financialreport':
                         if(count($request)>1){
                        echo json_encode($get->get_financialreport($request[1]));
                            }
@@ -165,7 +159,7 @@ switch($_SERVER['REQUEST_METHOD']){
                           echo json_encode($get->get_financialreport($data));
                                }
                       break;
-                 case 'annualreportonly': //final
+                 case 'annualreportonly': 
                      if(count($request)>1){
                      echo json_encode($get->get_annualonly($request[1]));
                         }
@@ -174,7 +168,7 @@ switch($_SERVER['REQUEST_METHOD']){
                            }
                            break;
 
-                case 'eventreportonly': //final
+                case 'eventreportonly': 
                   if(count($request)>1){
                      echo json_encode($get->get_eventonly($request[1]));
                           }
@@ -182,7 +176,7 @@ switch($_SERVER['REQUEST_METHOD']){
                          echo json_encode($get->get_eventonly($data));
                          }
                         break;
-                case 'financialreportonly': //final
+                case 'financialreportonly': 
                      if(count($request)>1){
                      echo json_encode($get->get_financialonly($request[1]));
                        }
@@ -191,7 +185,7 @@ switch($_SERVER['REQUEST_METHOD']){
                          }
                        break;
 
-                       case 'projectreport': //final
+                       case 'projectreport': 
                         if(count($request)>1){
                             echo json_encode($get->get_projectreport($request[1]));
                                 }
@@ -200,7 +194,7 @@ switch($_SERVER['REQUEST_METHOD']){
                                    }
                             break;
     
-                    case 'projectreportall': //final
+                    case 'projectreportall': 
                         if(count($request)>1){
                             echo json_encode($get->get_projectreportAll($request[1]));
                                 }
@@ -210,14 +204,14 @@ switch($_SERVER['REQUEST_METHOD']){
                             break;
 
 
-                            case 'projectreportonly': //final
-                                if(count($request)>1){
-                                echo json_encode($get->get_projectonly($request[1]));
-                                      }
-                                else{
-                                    echo json_encode($get->get_projectonly($data));
-                                    }
-                                    break;
+                    case 'projectreportonly': 
+                        if(count($request)>1){
+                            echo json_encode($get->get_projectonly($request[1]));
+                                }
+                            else{
+                            echo json_encode($get->get_projectonly($data));
+                                }
+                            break;
                                 
             
 
@@ -226,15 +220,12 @@ switch($_SERVER['REQUEST_METHOD']){
                 break;
                     
             default:
-                // Return a 403 response for unsupported requests
                 http_response_code(403);
                 echo json_encode(["error" => "Forbidden"]);
                 break;
         }
         break;
-    // Handle POST requests
     case 'POST':
-        // Decode JSON data from request body
         $data = json_decode(file_get_contents("php://input"));
         
         switch($request[0]){
@@ -258,7 +249,7 @@ switch($_SERVER['REQUEST_METHOD']){
                     break;
              case 'annualreport':
                 echo json_encode($post->annualreports($data, $request[1]));
-                break; //final
+                break; 
             case 'eventreport':
                  echo json_encode($post->eventreport($data, $request[1]));
                  break;
@@ -268,6 +259,12 @@ switch($_SERVER['REQUEST_METHOD']){
             case 'financialreport':
                 echo json_encode($post->insertFinancialReport($data, $request[1]));
                 break;
+            case 'projectreport';
+                echo json_encode($post->projectreport($data, $request[1]));
+                break; 
+            case 'edit_projectreport';
+                echo json_encode($post->edit_projectreport($data, $request[1]));
+                break;   
             case 'edit_eventreport':
                 echo json_encode($post->edit_eventreport($data, $request[1]));
                  break;
@@ -285,6 +282,9 @@ switch($_SERVER['REQUEST_METHOD']){
                 break;
             case 'delete_eventreport':
                 echo json_encode($post->delete_eventreport($request[1]));
+                break;
+            case 'delete_projectreport':
+                echo json_encode($post->delete_projectreport($request[1]));
                 break;
 
             default:
@@ -327,7 +327,6 @@ switch($_SERVER['REQUEST_METHOD']){
             echo json_encode(["error" => "Forbidden"]);
 
         } break;
-            // Return a 405 response for unsupported HTTP methods
             http_response_code(405);
             echo json_encode(["error" => "Method Not Allowed"]);
             break;

@@ -69,11 +69,6 @@ class Put extends GlobalMethods{
             return $this->sendResponse("Failed", $e->getMessage(), 500); 
         }
     }
-    
-    
-
-
-
 }
 
 ?>

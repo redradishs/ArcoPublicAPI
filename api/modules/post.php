@@ -64,7 +64,6 @@
             $email = trim($data['email']);
             $password = trim($data['password']);
     
-            // Debugging: Log received email and password
             error_log("Login attempt: email = $email, password = $password");
     
             $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
@@ -74,7 +73,6 @@
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if ($user) {
-                // Debugging: Log fetched user data
                 error_log("User found: " . print_r($user, true));
     
                 if (password_verify($password, $user['password'])) {
@@ -97,21 +95,12 @@
         }
 
 
-
-
-        
-
-
-
-
         function insertReport($data) {
-            // Check for required fields
             if (!isset($data->title) || !isset($data->description)) {
                 return $this->sendResponse("Missing fields", null, 400);
             }
         
             try {
-                // Prepare and execute the SQL statement
                 $stmt = $this->pdo->prepare("INSERT INTO reports (title, description, date_created, user_id) 
                                             VALUES (:title, :description, NOW(), :user_id)");
                 $stmt->execute([
@@ -120,7 +109,6 @@
                     'user_id' => 1
                 ]);
         
-                // Get the ID of the newly inserted report
                 $lastInsertId = $this->pdo->lastInsertId(); 
         
                 return $this->sendPayload(null, "Success", "Successfully Added", 200);
@@ -131,15 +119,9 @@
         }
 
 
-        function flipbook($data, $user_id) {
-            // Check for required fields
-            // if (!isset($data->reportid) || !isset($data->collageid)) {
-            //     return $this->sendResponse("Missing fields", null, 400);
-            // }
-            
-        
-            try {
-                // Prepare and execute the SQL statement
+        function flipbook($data, $user_id) {        
+           try {
+                
                 $stmt = $this->pdo->prepare("INSERT INTO flipbook (user_id, report_id, collage_id) 
                                             VALUES (:user_id, :report_id, :collage_id)");
                 $stmt->execute([
@@ -165,15 +147,12 @@
                 return array("success" => false, "message" => "Invalid request method.");
             }
         
-            // Declare the upload directory path
             $uploadPath = "images/";
         
-            // Check if the file was uploaded
             if (!isset($_FILES[$fileInputName]) || $_FILES[$fileInputName]['error'] !== UPLOAD_ERR_OK) {
                 return array("success" => false, "message" => "No file uploaded or upload error occurred.");
             }
         
-            // Retrieve the latest event_id from the eventreports table
             $stmt = $this->pdo->prepare("SELECT event_id FROM eventreports where user_id = ? ORDER BY event_id DESC LIMIT 1");
             $stmt->execute([$userId]);
             $latestEvent = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -184,28 +163,23 @@
         
             $reportId = $latestEvent['event_id'];
         
-            // Get file details
             $fileName = basename($_FILES[$fileInputName]['name']);
             $uploadFile = $uploadPath . $fileName;
         
-            // Move the uploaded file to the upload directory
             if (!move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $uploadFile)) {
                 return array("success" => false, "message" => "Failed to move uploaded file.");
             }
         
-            // Insert new profile picture record
             $stmt = $this->pdo->prepare("INSERT INTO collage (event_id, user_id, image_path) VALUES (?, ?, ?)");
             if (!$stmt->execute([$reportId, $userId, $uploadFile])) {
-                unlink($uploadFile); // Delete the uploaded file if insertion fails
+                unlink($uploadFile); 
                 return array("success" => false, "message" => "Failed to insert file details into database.");
             }
         
-            // Return success response
             return array("success" => true, "message" => "File uploaded successfully", "user_id" => $userId, "event_id" => $reportId);
         }
 
 
-        //Final Done
         public function annualreports($data, $id) {
             
             $sql = "INSERT INTO annualreports (
@@ -244,7 +218,6 @@
             }
         }
 
-        //final done
         public function eventreport($data, $id) {
            
             $sql = "INSERT INTO eventreports (
@@ -283,7 +256,6 @@
             }
         }
         
-        //final done
         public function expenses($data, $user_id) {
             $sql = "SELECT event_id FROM eventreports WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         
@@ -296,7 +268,6 @@
                     return $this->sendPayload(null, "failed", "No recent event found for this user.", 404);
                 }
         
-                // SQL query to insert expense data with multiple columns
                 $insertSql = "INSERT INTO eventexpenses (
                     event_id,
                     expense_item1, expense_amount1,
@@ -314,7 +285,6 @@
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )";
         
-                // Validate data and set default values to avoid mismatches
                 $values = [
                     $latestEventId,
                     $data->expense_item1 ?? null, $data->expense_amount1 ?? null,
@@ -330,7 +300,6 @@
                     $user_id
                 ];
         
-                // Prepare and execute the SQL statement with the correct number of values
                 $statement = $this->pdo->prepare($insertSql);
                 $statement->execute($values);
         
@@ -462,7 +431,6 @@
         }
 
 
-        //final
         public function edit_eventreport($data, $id){
             $sql = "UPDATE eventreports
             SET 
@@ -501,7 +469,6 @@
             return $this->sendPayload(null, "failed", $errmsg, $code);
         }
 
-        //final
         public function edit_financialreport($data, $id){
             $sql = "UPDATE financialreports
             SET 
@@ -781,18 +748,56 @@
         }
     
         
+        public function projectreport($data, $id) {
+            if (is_null($id)) {
+                return $this->sendPayload(null, "failed", "User ID cannot be null.", 400);
+            }
         
+            $sql = "INSERT INTO projectreport (
+                        startDate,
+                        endDate,
+                        projectName,
+                        projectManager,
+                        statusDesc,
+                        overallProgress,
+                        milestoneDesc,
+                        compeDate,
+                        taskDesc,
+                        stat,
+                        issuesName,
+                        issuesPrio,
+                        user_id
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
+            try {
+                $statement = $this->pdo->prepare($sql);
         
+                error_log("Inserting project report with user_id: " . $id);
+                error_log("Data: " . print_r($data, true));
         
-
-     
-
+                $statement->execute([
+                    $data->startDate,
+                    $data->endDate,
+                    $data->projectName,
+                    $data->projectManager,
+                    $data->statusDesc,
+                    $data->overallProgress,
+                    $data->milestoneDesc,
+                    $data->compeDate,
+                    $data->taskDesc,
+                    $data->stat,
+                    $data->issuesName,
+                    $data->issuesPrio,
+                    $id 
+                ]);
         
+                return $this->sendPayload(null, "success", "Successfully created a new project report.", 200);
+            } catch (\PDOException $e) {
+                error_log("PDOException in projectreport: " . $e->getMessage());
         
-    
-        
-
-    
+                $errmsg = $e->getMessage();
+                return $this->sendPayload(null, "failed", $errmsg, 400);
+            }
+        }
     }
-    ?>
+?>

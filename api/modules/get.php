@@ -78,7 +78,6 @@ class Get extends GlobalMethods{
         return $this->get_records("users", $conditionString);
     }
 
-    //data to be changed to user_id, will do once testing phase is over
     public function get_flipbook($data) {
         $sqlString = "SELECT u.username, r.title, r.description, r.date_created, c.collage_desc, f.* 
         FROM users u
@@ -101,7 +100,6 @@ class Get extends GlobalMethods{
         }
     }
 
-        //data to be changed to user_id, will do once testing phase is over
         public function get_flipbookall() {
             $sqlString = "SELECT u.username, r.title, r.description, c.collage_desc, f.* 
             FROM users u
@@ -122,7 +120,6 @@ class Get extends GlobalMethods{
             }
         }
 
-    //test COLLAGE FINAL
     public function get_collage($userId)
     {
         $sqlString = "
@@ -166,7 +163,6 @@ class Get extends GlobalMethods{
         }
     }
     
-    //final
     public function get_reports($data){
         $sqlString = "SELECT * FROM reports WHERE report_id = ?";
         $stmt = $this->pdo->prepare($sqlString);
@@ -182,129 +178,122 @@ class Get extends GlobalMethods{
         }
     }
 
-    //final
     public function get_annualReport($data) {
-        // Select the most recent report by user_id
         $sqlString = "SELECT * FROM annualreports WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         $stmt = $this->pdo->prepare($sqlString);
-        $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+        $stmt->bindParam(1, $data, PDO::PARAM_INT); 
         $stmt->execute();
     
-        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
     
-        if ($result) { // Check if a record is returned
-            return $this->getResponse($result, "Success", null, 200); // Success response
+        if ($result) { 
+            return $this->getResponse($result, "Success", null, 200); 
         } else {
-            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
         }
     }
     
 
-        //final
+        
         public function get_eventreport($data) {
-            // Select the most recent report by user_id
             $sqlString = "SELECT * FROM eventreports WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
             $stmt = $this->pdo->prepare($sqlString);
-            $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+            $stmt->bindParam(1, $data, PDO::PARAM_INT); 
             $stmt->execute();
         
-            $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            $result = $stmt->fetch(PDO::FETCH_ASSOC); 
         
-            if ($result) { // Check if a record is returned
-                return $this->getResponse($result, "Success", null, 200); // Success response
+            if ($result) { 
+                return $this->getResponse($result, "Success", null, 200); 
             } else {
-                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
             }
         }
 
-        //Final
         public function get_eventreportAll($data) {
-            // Select the most recent report by user_id
             $sqlString = "SELECT * FROM eventreports WHERE user_id = ?";
             $stmt = $this->pdo->prepare($sqlString);
-            $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+            $stmt->bindParam(1, $data, PDO::PARAM_INT); 
             $stmt->execute();
         
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
         
-            if ($result) { // Check if a record is returned
-                return $this->getResponse($result, "Success", null, 200); // Success response
+            if ($result) { 
+                return $this->getResponse($result, "Success", null, 200); 
             } else {
-                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
             }
         }
 
 
-        //final
+       
         public function get_annualReportAll($data) {
-            // Select the most recent report by user_id
             $sqlString = "SELECT * FROM annualreports WHERE user_id = ?";
             $stmt = $this->pdo->prepare($sqlString);
-            $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+            $stmt->bindParam(1, $data, PDO::PARAM_INT); 
             $stmt->execute();
         
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
         
-            if ($result) { // Check if a record is returned
-                return $this->getResponse($result, "Success", null, 200); // Success response
+            if ($result) { 
+                return $this->getResponse($result, "Success", null, 200);
             } else {
-                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
             }
         }
 
-        //final
+        
         public function get_financialreportAll($data) {
-            // Select the most recent report by user_id
             $sqlString = "SELECT * FROM financialreports WHERE user_id = ?";
             $stmt = $this->pdo->prepare($sqlString);
-            $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+            $stmt->bindParam(1, $data, PDO::PARAM_INT); 
             $stmt->execute();
         
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
         
-            if ($result) { // Check if a record is returned
-                return $this->getResponse($result, "Success", null, 200); // Success response
+            if ($result) { 
+                return $this->getResponse($result, "Success", null, 200); 
             } else {
-                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
             }
         }
 
         
-    //final
+    
     public function get_financialreport($data) {
         $sqlString = "SELECT * FROM financialreports WHERE user_id = ? ORDER BY date_created DESC LIMIT 1";
         $stmt = $this->pdo->prepare($sqlString);
-        $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+        $stmt->bindParam(1, $data, PDO::PARAM_INT); 
         $stmt->execute();
     
-        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
     
-        if ($result) { // Check if a record is returned
-            return $this->getResponse($result, "Success", null, 200); // Success response
+        if ($result) { 
+            return $this->getResponse($result, "Success", null, 200); 
         } else {
-            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
         }
     }
 
 
-    //final
+   
     public function get_annualonly($data) {
         $sqlString = "SELECT * FROM annualreports WHERE report_id = ?";
         $stmt = $this->pdo->prepare($sqlString);
-        $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+        $stmt->bindParam(1, $data, PDO::PARAM_INT); 
         $stmt->execute();
     
-        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
     
-        if ($result) { // Check if a record is returned
-            return $this->getResponse($result, "Success", null, 200); // Success response
+        if ($result) { 
+            return $this->getResponse($result, "Success", null, 200);
         } else {
-            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
         }
     }
 
 
-    //final
+    
     public function get_eventonly($data) {
         $sqlString = "SELECT * FROM eventreports WHERE event_id = ?";
         $stmt = $this->pdo->prepare($sqlString);
@@ -338,76 +327,52 @@ class Get extends GlobalMethods{
 
 
     public function get_projectreport($data) {
-        // Select the most recent report by user_id
+        
         $sqlString = "SELECT * FROM projectreport WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         $stmt = $this->pdo->prepare($sqlString);
-        $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+        $stmt->bindParam(1, $data, PDO::PARAM_INT); 
         $stmt->execute();
     
-        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
     
-        if ($result) { // Check if a record is returned
-            return $this->getResponse($result, "Success", null, 200); // Success response
+        if ($result) { 
+            return $this->getResponse($result, "Success", null, 200); 
         } else {
-            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+            return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
         }
     }
 
-            //Final
+            
             public function get_projectreportAll($data) {
-                // Select the most recent report by user_id
+                
                 $sqlString = "SELECT * FROM projectreport WHERE user_id = ?";
                 $stmt = $this->pdo->prepare($sqlString);
-                $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+                $stmt->bindParam(1, $data, PDO::PARAM_INT); 
                 $stmt->execute();
             
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
             
-                if ($result) { // Check if a record is returned
-                    return $this->getResponse($result, "Success", null, 200); // Success response
+                if ($result) { 
+                    return $this->getResponse($result, "Success", null, 200); 
                 } else {
-                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404);
                 }
             }
 
             public function get_projectonly($data) {
                 $sqlString = "SELECT * FROM projectreport WHERE report_id = ?";
                 $stmt = $this->pdo->prepare($sqlString);
-                $stmt->bindParam(1, $data, PDO::PARAM_INT); // Bind user_id as an integer
+                $stmt->bindParam(1, $data, PDO::PARAM_INT);
                 $stmt->execute();
             
-                $result = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single record with fetch()
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
             
-                if ($result) { // Check if a record is returned
-                    return $this->getResponse($result, "Success", null, 200); // Success response
+                if ($result) { 
+                    return $this->getResponse($result, "Success", null, 200);
                 } else {
-                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404); // Failure response
+                    return $this->getResponse(null, "Failed", "Failed to retrieve", 404); 
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function get_reportsall(){
@@ -425,18 +390,13 @@ class Get extends GlobalMethods{
     }
 
 
-
-
-    //logout
-
-    
     public function isUserLoggedIn() {
         return isset($_SESSION['user_id']);
     }
 
     public function logout() {
-        session_unset(); // Clear all session variables
-        session_destroy(); // Destroy the session
+        session_unset(); 
+        session_destroy(); 
     }
 
 }
