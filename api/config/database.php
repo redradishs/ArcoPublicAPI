@@ -1,9 +1,15 @@
 <?php
 
+//set default time zone
+
+date_default_timezone_set("Asia/Manila");
+
+//set time limit of requests
+set_time_limit(1000);
 
 //define constants for server credentials/configuration
 define("SERVER", "localhost");
-define("DATABASE", "todolist");
+define("DATABASE", "arco_database");
 define("USER", "root");
 define("PASSWORD", "");
 define("DRIVER", "mysql");
