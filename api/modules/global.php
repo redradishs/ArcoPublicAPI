@@ -12,18 +12,32 @@ class GlobalMethods{
             "timestamp"=>date_create()
         );
     }
-
-    public function sendResponse($message, $error, $statusCode) {
+    
+        public function sendResponse($message, $data, $statusCode) {
         $response = [
             'message' => $message
         ];
-        if ($error !== null) {
-            $response['error'] = $error;
+        if ($data !== null) {
+            $response['data'] = $data;
         }
         http_response_code($statusCode);
         header('Content-Type: application/json');
         echo json_encode($response);
+        exit(); 
     }
+    
+
+    // public function sendResponse($message, $error, $statusCode) {
+    //     $response = [
+    //         'message' => $message
+    //     ];
+    //     if ($error !== null) {
+    //         $response['error'] = $error;
+    //     }
+    //     http_response_code($statusCode);
+    //     header('Content-Type: application/json');
+    //     echo json_encode($response);
+    // }
 
     public function getResponse($data, $remarks, $error, $statusCode) {
         $response = [
